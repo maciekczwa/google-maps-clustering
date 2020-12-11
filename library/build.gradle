@@ -35,7 +35,8 @@ android {
 
 dependencies {
     implementation "com.android.support:support-annotations:$supportVersion"
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "me.tatiyanupanwong.supasin.android.libraries.kits.maps:maps-core:$mapKitVersion"
+    implementation 'com.android.support:interpolator:28.0.0'
 }
 
 publish {

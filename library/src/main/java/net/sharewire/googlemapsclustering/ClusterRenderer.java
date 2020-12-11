@@ -9,26 +9,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.MapKit;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.BitmapDescriptor;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.LatLng;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.MapClient;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.Marker;
+
 import static net.sharewire.googlemapsclustering.Preconditions.checkNotNull;
 
-class ClusterRenderer<T extends ClusterItem> implements GoogleMap.OnMarkerClickListener {
+class ClusterRenderer<T extends ClusterItem> implements MapClient.OnMarkerClickListener {
 
     private static final int BACKGROUND_MARKER_Z_INDEX = 0;
 
     private static final int FOREGROUND_MARKER_Z_INDEX = 1;
 
-    private final GoogleMap mGoogleMap;
+    private final MapClient mMapClient;
 
     private final List<Cluster<T>> mClusters = new ArrayList<>();
 
@@ -38,9 +38,9 @@ class ClusterRenderer<T extends ClusterItem> implements GoogleMap.OnMarkerClickL
 
     private ClusterManager.Callbacks<T> mCallbacks;
 
-    ClusterRenderer(@NonNull Context context, @NonNull GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        mGoogleMap.setOnMarkerClickListener(this);
+    ClusterRenderer(@NonNull Context context, @NonNull MapClient mapClient) {
+        mMapClient = mapClient;
+        mMapClient.setOnMarkerClickListener(this);
         mIconGenerator = new DefaultIconGenerator<>(context);
     }
 
@@ -100,7 +100,7 @@ class ClusterRenderer<T extends ClusterItem> implements GoogleMap.OnMarkerClickL
             Cluster<T> parentCluster = findParentCluster(mClusters, clusterToRemove.getLatitude(),
                     clusterToRemove.getLongitude());
             if (parentCluster != null) {
-                animateMarkerToLocation(markerToRemove, new LatLng(parentCluster.getLatitude(),
+                animateMarkerToLocation(markerToRemove, MapKit.newLatLng(parentCluster.getLatitude(),
                         parentCluster.getLongitude()), true);
             } else {
                 markerToRemove.remove();
@@ -120,17 +120,17 @@ class ClusterRenderer<T extends ClusterItem> implements GoogleMap.OnMarkerClickL
             Cluster parentCluster = findParentCluster(clustersToRemove, clusterToAdd.getLatitude(),
                     clusterToAdd.getLongitude());
             if (parentCluster != null) {
-                markerToAdd = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(parentCluster.getLatitude(), parentCluster.getLongitude()))
+                markerToAdd = mMapClient.addMarker(MapKit.newMarkerOptions()
+                        .position(MapKit.newLatLng(parentCluster.getLatitude(), parentCluster.getLongitude()))
                         .icon(markerIcon)
                         .title(markerTitle)
                         .snippet(markerSnippet)
                         .zIndex(FOREGROUND_MARKER_Z_INDEX));
                 animateMarkerToLocation(markerToAdd,
-                        new LatLng(clusterToAdd.getLatitude(), clusterToAdd.getLongitude()), false);
+                        MapKit.newLatLng(clusterToAdd.getLatitude(), clusterToAdd.getLongitude()), false);
             } else {
-                markerToAdd = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(clusterToAdd.getLatitude(), clusterToAdd.getLongitude()))
+                markerToAdd = mMapClient.addMarker(MapKit.newMarkerOptions()
+                        .position(MapKit.newLatLng(clusterToAdd.getLatitude(), clusterToAdd.getLongitude()))
                         .icon(markerIcon)
                         .title(markerTitle)
                         .snippet(markerSnippet)
@@ -214,9 +214,9 @@ class ClusterRenderer<T extends ClusterItem> implements GoogleMap.OnMarkerClickL
 
         @Override
         public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
-            double latitude = (endValue.latitude - startValue.latitude) * fraction + startValue.latitude;
-            double longitude = (endValue.longitude - startValue.longitude) * fraction + startValue.longitude;
-            return new LatLng(latitude, longitude);
+            double latitude = (endValue.getLatitude() - startValue.getLatitude()) * fraction + startValue.getLatitude();
+            double longitude = (endValue.getLongitude() - startValue.getLongitude()) * fraction + startValue.getLongitude();
+            return MapKit.newLatLng(latitude, longitude);
         }
     }
 }

@@ -23,11 +23,16 @@ android {
         // The application doesn't have to be indexable by Google Search.
         disable 'GoogleAppIndexingWarning'
     }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+        exclude 'META-INF/androidx.interpolator_interpolator.version'
+    }
 }
 
 dependencies {
     implementation project(':library')
-    implementation "com.android.support:support-v4:$supportVersion"
-    implementation "com.android.support:appcompat-v7:$supportVersion"
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "me.tatiyanupanwong.supasin.android.libraries.kits.maps:maps-core:$mapKitVersion"
+    implementation "me.tatiyanupanwong.supasin.android.libraries.kits.maps:maps-google:1.2.2"
 }

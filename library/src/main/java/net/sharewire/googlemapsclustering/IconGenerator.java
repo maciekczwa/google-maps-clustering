@@ -2,7 +2,8 @@ package net.sharewire.googlemapsclustering;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.BitmapDescriptor;
+
 
 /**
  * Generates icons for clusters and cluster items. Note that its implementations
