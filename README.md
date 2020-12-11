@@ -1,3 +1,11 @@
+# Maps Clustering for Android
+
+This is a port of clusering library https://github.com/sharewire/google-maps-clustering which works on both Google and Huawei maps using
+https://github.com/SupasinTatiyanupanwong/map-kit-android.
+It is also updated to androidx.
+
+Below is the original description with changed installation
+
 # Google Maps Clustering for Android
 
 [ ![Download](https://api.bintray.com/packages/sharewire/maven/google-maps-clustering/images/download.svg) ](https://bintray.com/sharewire/maven/google-maps-clustering/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Google%20Maps%20Clustering%20for%20Android-blue.svg?style=flat)](https://android-arsenal.com/details/1/6552) <a href="http://www.methodscount.com/?lib=net.sharewire%3Agoogle-maps-clustering%3A0.1.2-beta"><img src="https://img.shields.io/badge/Methods count-193-e91e63.svg"/></a>
@@ -13,13 +21,13 @@ Why not use [Google Maps Android API Utility Library](https://github.com/googlem
 1. Make sure you have JCenter in your repository list:
 ```groovy
 repositories {
-    jcenter()
+    maven { url 'https://jitpack.io' }
 }
 ```
 2. Add a dependency to your build.gradle:
 ```groovy
 dependencies {
-    compile 'net.sharewire:google-maps-clustering:0.1.3'
+    implementation 'com.github.maciekczwa:google-maps-clustering:0.2.0'
 }
 ```
 
@@ -60,7 +68,7 @@ class SampleClusterItem implements ClusterItem {
 }
 ```
 
-2. Create an instance of ClusterManager and set it as a camera idle listener using `GoogleMap.setOnCameraIdleListener(...)`:
+2. Create an instance of ClusterManager and set it as a camera idle listener using `MapClient.setOnCameraIdleListener(...)`:
 
 ```java
 ClusterManager<SampleClusterItem> clusterManager = new ClusterManager<>(context, googleMap);
