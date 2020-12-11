@@ -10,6 +10,17 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
+        def secureProps = new Properties()
+        if (file("../secure.properties").exists()) {
+            file("../secure.properties")?.withInputStream { secureProps.load(it) }
+        }
+        resValue "string", "google_maps_key", (secureProps.getProperty("GOOGLE_MAPS_API_KEY") ?: "")
+
+        // To add your Maps API key to this project:
+        // 1. Create a file ApiDemos/java/secure.properties
+        // 2. Add this line, where YOUR_API_KEY is your API key:
+        //        GOOGLE_MAPS_API_KEY=YOUR_API_KEY
     }
 
     buildTypes {
