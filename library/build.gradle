@@ -1,12 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 buildscript {
     repositories {
         jcenter()
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.7.0'
     }
 }
 
@@ -35,14 +31,5 @@ android {
 
 dependencies {
     implementation "com.android.support:support-annotations:$supportVersion"
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
-}
-
-publish {
-    userOrg = 'sharewire'
-    groupId = 'net.sharewire'
-    artifactId = 'google-maps-clustering'
-    publishVersion = rootProject.versionName
-    desc = 'Fast marker clustering library for Google Maps Android API.'
-    website = 'https://github.com/sharewire/google-maps-clustering'
+    implementation "me.tatiyanupanwong.supasin.android.libraries.kits.maps:maps-core:$mapKitVersion"
 }

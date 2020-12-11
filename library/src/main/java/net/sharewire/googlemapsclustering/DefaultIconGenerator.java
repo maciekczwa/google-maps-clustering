@@ -13,8 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.MapKit;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.BitmapDescriptor;
 
 import static net.sharewire.googlemapsclustering.Preconditions.checkNotNull;
 
@@ -101,7 +101,7 @@ public class DefaultIconGenerator<T extends ClusterItem> implements IconGenerato
         Canvas canvas = new Canvas(iconBitmap);
         clusterIconView.draw(canvas);
 
-        return BitmapDescriptorFactory.fromBitmap(iconBitmap);
+        return MapKit.getBitmapDescriptorFactory().fromBitmap(iconBitmap);
     }
 
     @NonNull
@@ -116,7 +116,7 @@ public class DefaultIconGenerator<T extends ClusterItem> implements IconGenerato
 
     @NonNull
     private BitmapDescriptor createClusterItemIcon() {
-        return BitmapDescriptorFactory.fromResource(mIconStyle.getClusterIconResId());
+        return MapKit.getBitmapDescriptorFactory().fromResource(mIconStyle.getClusterIconResId());
     }
 
     private int getClusterIconBucket(@NonNull Cluster<T> cluster) {

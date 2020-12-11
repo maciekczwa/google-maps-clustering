@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,22 +12,25 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.LatLngBounds;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.MapClient;
+
 import static net.sharewire.googlemapsclustering.Preconditions.checkArgument;
 import static net.sharewire.googlemapsclustering.Preconditions.checkNotNull;
 
 /**
  * Groups multiple items on a map into clusters based on the current zoom level.
  * Clustering occurs when the map becomes idle, so an instance of this class
- * must be set as a camera idle listener using {@link GoogleMap#setOnCameraIdleListener}.
+ * must be set as a camera idle listener using {@link MapClient#setOnCameraIdleListener}.
  *
  * @param <T> the type of an item to be clustered
  */
-public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraIdleListener {
+public class ClusterManager<T extends ClusterItem> implements MapClient.OnCameraIdleListener {
 
     private static final int QUAD_TREE_BUCKET_CAPACITY = 4;
     private static final int DEFAULT_MIN_CLUSTER_SIZE = 1;
 
-    private final GoogleMap mGoogleMap;
+    private final MapClient mMapClient;
 
     private final QuadTree<T> mQuadTree;
 
@@ -75,12 +76,12 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      * To customize marker icons, set a custom icon generator using
      * {@link ClusterManager#setIconGenerator(IconGenerator)}.
      *
-     * @param googleMap the map instance where markers will be rendered
+     * @param mapClient the map instance where markers will be rendered
      */
-    public ClusterManager(@NonNull Context context, @NonNull GoogleMap googleMap) {
+    public ClusterManager(@NonNull Context context, @NonNull MapClient mapClient) {
         checkNotNull(context);
-        mGoogleMap = checkNotNull(googleMap);
-        mRenderer = new ClusterRenderer<>(context, googleMap);
+        mMapClient = checkNotNull(mapClient);
+        mRenderer = new ClusterRenderer<>(context, mapClient);
         mQuadTree = new QuadTree<>(QUAD_TREE_BUCKET_CAPACITY);
     }
 
@@ -141,8 +142,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             mClusterTask.cancel(true);
         }
 
-        mClusterTask = new ClusterTask(mGoogleMap.getProjection().getVisibleRegion().latLngBounds,
-                mGoogleMap.getCameraPosition().zoom).executeOnExecutor(mExecutor);
+        mClusterTask = new ClusterTask(mMapClient.getProjection().getVisibleRegion().getLatLngBounds(),
+                mMapClient.getCameraPosition().getZoom()).executeOnExecutor(mExecutor);
     }
 
     @NonNull
@@ -151,11 +152,11 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
         long tileCount = (long) (Math.pow(2, zoomLevel) * 2);
 
-        double startLatitude = latLngBounds.northeast.latitude;
-        double endLatitude = latLngBounds.southwest.latitude;
+        double startLatitude = latLngBounds.getNortheast().getLatitude();
+        double endLatitude = latLngBounds.getSouthwest().getLatitude();
 
-        double startLongitude = latLngBounds.southwest.longitude;
-        double endLongitude = latLngBounds.northeast.longitude;
+        double startLongitude = latLngBounds.getSouthwest().getLongitude();
+        double endLongitude = latLngBounds.getNortheast().getLongitude();
 
         double stepLatitude = 180.0 / tileCount;
         double stepLongitude = 360.0 / tileCount;

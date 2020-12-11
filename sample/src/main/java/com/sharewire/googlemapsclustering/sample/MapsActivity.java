@@ -1,16 +1,12 @@
 package com.sharewire.googlemapsclustering.sample;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+
 import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+
 
 import net.sharewire.googlemapsclustering.Cluster;
 import net.sharewire.googlemapsclustering.ClusterManager;
@@ -18,12 +14,17 @@ import net.sharewire.googlemapsclustering.ClusterManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.MapFragment;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.MapKit;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.LatLngBounds;
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.MapClient;
+
+public class MapsActivity extends FragmentActivity implements MapKit.OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-    private static final LatLngBounds NETHERLANDS = new LatLngBounds(
-            new LatLng(50.77083, 3.57361), new LatLng(53.35917, 7.10833));
+    private static final LatLngBounds NETHERLANDS = MapKit.newLatLngBounds(
+            MapKit.newLatLng(50.77083, 3.57361), MapKit.newLatLng(53.35917, 7.10833));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +36,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(final GoogleMap googleMap) {
-        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+    public void onMapReady(final MapClient mapClient) {
+        mapClient.setOnMapLoadedCallback(new MapClient.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(NETHERLANDS, 0));
+                mapClient.animateCamera(MapKit.getCameraUpdateFactory().newLatLngBounds(NETHERLANDS, 0));
             }
         });
 
-        ClusterManager<SampleClusterItem> clusterManager = new ClusterManager<>(this, googleMap);
+        ClusterManager<SampleClusterItem> clusterManager = new ClusterManager<>(this, mapClient);
         clusterManager.setCallbacks(new ClusterManager.Callbacks<SampleClusterItem>() {
             @Override
             public boolean onClusterClick(@NonNull Cluster<SampleClusterItem> cluster) {
@@ -57,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
-        googleMap.setOnCameraIdleListener(clusterManager);
+        mapClient.setOnCameraIdleListener(clusterManager);
 
         List<SampleClusterItem> clusterItems = new ArrayList<>();
         for (int i = 0; i < 20000; i++) {
@@ -68,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupMapFragment() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.setRetainInstance(true);
         mapFragment.getMapAsync(this);

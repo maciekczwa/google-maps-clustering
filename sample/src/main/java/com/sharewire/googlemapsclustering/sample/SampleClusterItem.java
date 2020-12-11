@@ -1,11 +1,14 @@
 package com.sharewire.googlemapsclustering.sample;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 
 import net.sharewire.googlemapsclustering.ClusterItem;
+
+import me.tatiyanupanwong.supasin.android.libraries.kits.maps.model.LatLng;
 
 class SampleClusterItem implements ClusterItem {
 
@@ -17,12 +20,12 @@ class SampleClusterItem implements ClusterItem {
 
     @Override
     public double getLatitude() {
-        return location.latitude;
+        return location.getLatitude();
     }
 
     @Override
     public double getLongitude() {
-        return location.longitude;
+        return location.getLongitude();
     }
 
     @Nullable
